@@ -1,11 +1,12 @@
-import torch
-from torch.nn.functional import interpolate
-from torchvision.transforms import functional as F
-from torchvision.ops.boxes import batched_nms
-from PIL import Image
-import numpy as np
-import os
 import math
+import os
+
+import numpy as np
+import torch
+from PIL import Image
+from torch.nn.functional import interpolate
+from torchvision.ops.boxes import batched_nms
+from torchvision.transforms import functional as F
 
 # OpenCV is optional, but required if using numpy arrays instead of PIL
 try:

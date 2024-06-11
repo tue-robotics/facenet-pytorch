@@ -3,13 +3,10 @@ import os
 import shutil
 import sys
 import tempfile
-
-from urllib.request import urlopen, Request
+from urllib.request import Request, urlopen
 
 try:
-    from tqdm.auto import (
-        tqdm,
-    )  # automatically select proper tqdm submodule if available
+    from tqdm.auto import tqdm  # automatically select proper tqdm submodule if available
 except ImportError:
     from tqdm import tqdm
 

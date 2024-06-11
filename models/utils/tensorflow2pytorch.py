@@ -1,14 +1,15 @@
+import json
+import os
+import sys
+
 import tensorflow as tf
 import torch
-import json
-import os, sys
 
 from dependencies.facenet.src import facenet
-from dependencies.facenet.src.models import inception_resnet_v1 as tf_mdl
 from dependencies.facenet.src.align import detect_face
-
+from dependencies.facenet.src.models import inception_resnet_v1 as tf_mdl
 from models.inception_resnet_v1 import InceptionResnetV1
-from models.mtcnn import PNet, RNet, ONet
+from models.mtcnn import ONet, PNet, RNet
 
 
 def import_tf_params(tf_mdl_dir, sess):

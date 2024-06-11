@@ -3,19 +3,20 @@ The following code is intended to be run only by Github actions for continuius i
 testing purposes. For implementation examples see notebooks in the examples folder.
 """
 
-from PIL import Image, ImageDraw
-import torch
-from torch.utils.data import DataLoader
-from torchvision import transforms, datasets
+import glob
+import os
+import sys
+from time import time
+
 import numpy as np
 import pandas as pd
-from time import time
-import sys, os
-import glob
+import torch
+from PIL import Image, ImageDraw
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
 
-from models.mtcnn import MTCNN, fixed_image_standardization
 from models.inception_resnet_v1 import InceptionResnetV1, get_torch_home
-
+from models.mtcnn import MTCNN, fixed_image_standardization
 
 #### CLEAR ALL OUTPUT FILES ####
 
