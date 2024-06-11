@@ -1,9 +1,10 @@
-from facenet_pytorch import MTCNN, training
-import torch
-from torchvision import datasets, transforms
-from torch.utils.data import DataLoader, RandomSampler
-from tqdm import tqdm
 import time
+
+import torch
+from facenet_pytorch import MTCNN, training
+from torch.utils.data import DataLoader, RandomSampler
+from torchvision import datasets, transforms
+from tqdm import tqdm
 
 
 def main():

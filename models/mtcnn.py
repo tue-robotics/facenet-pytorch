@@ -1,7 +1,8 @@
+import os
+
+import numpy as np
 import torch
 from torch import nn
-import numpy as np
-import os
 
 from .utils.detect_face import detect_face, extract_face
 

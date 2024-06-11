@@ -1,4 +1,6 @@
-import setuptools, os
+import os
+
+import setuptools
 
 PACKAGE_NAME = "facenet-pytorch"
 VERSION = "2.5.2"
