@@ -2,9 +2,9 @@
 
 *You can also read a translated version of this file [in Chinese 简体中文版](README_cn.md).*
 
+[![Python](https://github.com/tue-robotics/facenet-pytorch/actions/workflows/python.yml/badge.svg)](https://github.com/tue-robotics/facenet-pytorch/actions/workflows/python.yml)
+[![Code Coverage](https://img.shields.io/codecov/c/github/tue-robotics/facenet-pytorch.svg)](https://codecov.io/gh/tue-robotics/facenet-pytorch)
 [![Downloads](https://pepy.tech/badge/facenet-pytorch)](https://pepy.tech/project/facenet-pytorch)
-
-[![Code Coverage](https://img.shields.io/codecov/c/github/timesler/facenet-pytorch.svg)](https://codecov.io/gh/timesler/facenet-pytorch)
 
 This is a repository for Inception Resnet (V1) models in pytorch, pretrained on VGGFace2 and CASIA-Webface.
 
