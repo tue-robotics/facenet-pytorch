@@ -1,10 +1,12 @@
 """
-The following code is intended to be run only by Github actions for continuius intengration and
-testing purposes. For implementation examples see notebooks in the examples folder.
+The following code is intended to be run only by GitHub actions for continuous integration and
+testing purposes.
+For implementation examples, see notebooks in the examples folder.
 """
 
 import glob
 import os
+from pathlib import Path
 import sys
 from time import time
 
@@ -12,11 +14,10 @@ import numpy as np
 import pandas as pd
 import torch
 from PIL import Image, ImageDraw
-from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from models.inception_resnet_v1 import InceptionResnetV1, get_torch_home
-from models.mtcnn import MTCNN, fixed_image_standardization
+from facenet_pytorch.models.inception_resnet_v1 import InceptionResnetV1, get_torch_home
+from facenet_pytorch.models.mtcnn import MTCNN, fixed_image_standardization
 
 #### CLEAR ALL OUTPUT FILES ####
 
@@ -32,19 +33,17 @@ for c in crop_files:
 
 
 #### TEST EXAMPLE IPYNB'S ####
+test_dir = Path(__file__).parent
+root_dir = test_dir.parent
+example_dir = root_dir / "examples"
 
-os.system("jupyter nbconvert --to script --stdout examples/infer.ipynb examples/finetune.ipynb > examples/tmptest.py")
-os.chdir("examples")
-try:
-    import examples.tmptest
-except:
-    import tmptest
-os.chdir("..")
+os.system(f"jupyter nbconvert --to python --stdout {example_dir}/infer.ipynb {example_dir}/finetune.ipynb > {example_dir}/tmptest.py")
+
+exec((example_dir / "tmptest.py").open().read())
+os.chdir(test_dir)
 
 
 #### TEST MTCNN ####
-
-
 def get_image(path, trans):
     img = Image.open(path)
     img = trans(img)
@@ -146,10 +145,9 @@ for i, ds in enumerate(["vggface2", "casia-webface"]):
         assert total_error_fromfile < 1e-2
 
 
-#### TEST CLASSIFICATION ####
-
-resnet_pt = InceptionResnetV1(pretrained=ds, classify=True).eval()
-prob = resnet_pt(aligned)
+    #### TEST CLASSIFICATION ####
+    resnet_pt = InceptionResnetV1(pretrained=ds, classify=True).eval()
+    prob = resnet_pt(aligned)
 
 
 #### MULTI-FACE TEST ####
