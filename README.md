@@ -1,6 +1,8 @@
-# Face Recognition Using Pytorch 
+# Face Recognition Using Pytorch
 
 *You can also read a translated version of this file [in Chinese 简体中文版](README_cn.md).*
+
+![banner](static/facenet-pytorch-banner.png)
 
 [![Python](https://github.com/tue-robotics/facenet-pytorch/actions/workflows/python.yml/badge.svg)](https://github.com/tue-robotics/facenet-pytorch/actions/workflows/python.yml)
 [![Code Coverage](https://img.shields.io/codecov/c/github/tue-robotics/facenet-pytorch.svg)](https://codecov.io/gh/tue-robotics/facenet-pytorch)
@@ -18,12 +20,12 @@ Also included in this repo is an efficient pytorch implementation of MTCNN for f
 * [Quick start](#quick-start)
 * [Pretrained models](#pretrained-models)
 * [Example notebooks](#example-notebooks)
-  + [*Complete detection and recognition pipeline*](#complete-detection-and-recognition-pipeline)
-  + [*Face tracking in video streams*](#face-tracking-in-video-streams)
-  + [*Finetuning pretrained models with new data*](#finetuning-pretrained-models-with-new-data)
-  + [*Guide to MTCNN in facenet-pytorch*](#guide-to-mtcnn-in-facenet-pytorch)
-  + [*Performance comparison of face detection packages*](#performance-comparison-of-face-detection-packages)
-  + [*The FastMTCNN algorithm*](#the-fastmtcnn-algorithm)
+  * [*Complete detection and recognition pipeline*](#complete-detection-and-recognition-pipeline)
+  * [*Face tracking in video streams*](#face-tracking-in-video-streams)
+  * [*Finetuning pretrained models with new data*](#finetuning-pretrained-models-with-new-data)
+  * [*Guide to MTCNN in facenet-pytorch*](#guide-to-mtcnn-in-facenet-pytorch)
+  * [*Performance comparison of face detection packages*](#performance-comparison-of-face-detection-packages)
+  * [*The FastMTCNN algorithm*](#the-fastmtcnn-algorithm)
 * [Running with docker](#running-with-docker)
 * [Use this repo in your own git project](#use-this-repo-in-your-own-git-project)
 * [Conversion of parameters from Tensorflow to Pytorch](#conversion-of-parameters-from-tensorflow-to-pytorch)
@@ -32,7 +34,7 @@ Also included in this repo is an efficient pytorch implementation of MTCNN for f
 ## Quick start
 
 1. Install:
-    
+
     ```bash
     # With pip:
     pip install facenet-pytorch
@@ -43,10 +45,10 @@ Also included in this repo is an efficient pytorch implementation of MTCNN for f
     # or use a docker container (see https://github.com/timesler/docker-jupyter-dl-gpu):
     docker run -it --rm timesler/jupyter-dl-gpu pip install facenet-pytorch && ipython
     ```
-    
+
 1. In python, import facenet-pytorch and instantiate models:
-    
-    ```python
+
+    ```py
     from facenet_pytorch import MTCNN, InceptionResnetV1
     
     # If required, create a face detection pipeline using MTCNN:
@@ -55,10 +57,10 @@ Also included in this repo is an efficient pytorch implementation of MTCNN for f
     # Create an inception resnet (in eval mode):
     resnet = InceptionResnetV1(pretrained='vggface2').eval()
     ```
-    
+
 1. Process an image:
-    
-    ```python
+
+    ```py
     from PIL import Image
     
     img = Image.open(<image path>)
@@ -78,7 +80,7 @@ See `help(MTCNN)` and `help(InceptionResnetV1)` for usage and implementation det
 
 ## Pretrained models
 
-See: [models/inception_resnet_v1.py](models/inception_resnet_v1.py)
+See: [models/inception_resnet_v1.py](facenet_pytorch/models/inception_resnet_v1.py)
 
 The following models have been ported to pytorch (with links to download pytorch state_dict's):
 
@@ -89,7 +91,7 @@ The following models have been ported to pytorch (with links to download pytorch
 
 There is no need to manually download the pretrained state_dict's; they are downloaded automatically on model instantiation and cached for future use in the torch cache. To use an Inception Resnet (V1) model for facial recognition/identification in pytorch, use:
 
-```python
+```py
 from facenet_pytorch import InceptionResnetV1
 
 # For a model pretrained on VGGFace2
@@ -119,7 +121,7 @@ Face recognition can be easily applied to raw images by first detecting faces us
 
 MTCNN can be used to build a face tracking system (using the `MTCNN.detect()` method). A full face tracking example can be found at [examples/face_tracking.ipynb](examples/face_tracking.ipynb).
 
-![](examples/tracked.gif)
+![Tracking](examples/tracked.gif)
 
 ### *Finetuning pretrained models with new data*
 
@@ -156,7 +158,7 @@ Each package is tested for its speed in detecting the faces in a set of 300 imag
 |dlib|3.80|8.39|14.53|
 |mtcnn|3.04|5.70|8.23|
 
-![](examples/performance-comparison.png)
+![Performance comparison](examples/performance-comparison.png)
 
 See the [notebook on kaggle](https://www.kaggle.com/timesler/comparison-of-face-detection-packages).
 
@@ -193,9 +195,9 @@ Alternatively, the code can be installed as a package using pip:
 
 ## Conversion of parameters from Tensorflow to Pytorch
 
-See: [models/utils/tensorflow2pytorch.py](models/tensorflow2pytorch.py)
+See: [models/utils/tensorflow2pytorch.py](facenet_pytorch/models/tensorflow2pytorch.py)
 
-Note that this functionality is not needed to use the models in this repo, which depend only on the saved pytorch `state_dict`'s. 
+Note that this functionality is not needed to use the models in this repo, which depend only on the saved pytorch `state_dict`'s.
 
 Following instantiation of the pytorch model, each layer's weights were loaded from equivalent layers in the pretrained tensorflow models from [davidsandberg/facenet](https://github.com/davidsandberg/facenet).
 
@@ -205,7 +207,7 @@ The equivalence of the outputs from the original tensorflow models and the pytor
 
 `>>> compare_model_outputs(mdl, sess, torch.randn(5, 160, 160, 3).detach())`
 
-```
+```py
 Passing test data through TF model
 
 tensor([[-0.0142,  0.0615,  0.0057,  ...,  0.0497,  0.0375, -0.0838],
@@ -228,16 +230,16 @@ Distance 1.2874517096861382e-06
 
 ---
 
-In order to re-run the conversion of tensorflow parameters into the pytorch model, ensure you clone this repo _with submodules_, as the davidsandberg/facenet repo is included as a submodule and parts of it are required for the conversion.
+In order to re-run the conversion of tensorflow parameters into the pytorch model, ensure you clone this repo *with submodules_, as the davidsandberg/facenet repo is included as a submodule and parts of it are required for the conversion.
 
 ## References
 
 1. David Sandberg's facenet repo: [https://github.com/davidsandberg/facenet](https://github.com/davidsandberg/facenet)
 
-1. F. Schroff, D. Kalenichenko, J. Philbin. _FaceNet: A Unified Embedding for Face Recognition and Clustering_, arXiv:1503.03832, 2015. [PDF](https://arxiv.org/pdf/1503.03832)
+1. F. Schroff, D. Kalenichenko, J. Philbin. *FaceNet: A Unified Embedding for Face Recognition and Clustering_, arXiv:1503.03832, 2015. [PDF](https://arxiv.org/pdf/1503.03832)
 
-1. Q. Cao, L. Shen, W. Xie, O. M. Parkhi, A. Zisserman. _VGGFace2: A dataset for recognising face across pose and age_, International Conference on Automatic Face and Gesture Recognition, 2018. [PDF](http://www.robots.ox.ac.uk/~vgg/publications/2018/Cao18/cao18.pdf)
+1. Q. Cao, L. Shen, W. Xie, O. M. Parkhi, A. Zisserman. *VGGFace2: A dataset for recognising face across pose and age_, International Conference on Automatic Face and Gesture Recognition, 2018. [PDF](http://www.robots.ox.ac.uk/~vgg/publications/2018/Cao18/cao18.pdf)
 
-1. D. Yi, Z. Lei, S. Liao and S. Z. Li. _CASIAWebface: Learning Face Representation from Scratch_, arXiv:1411.7923, 2014. [PDF](https://arxiv.org/pdf/1411.7923)
+1. D. Yi, Z. Lei, S. Liao and S. Z. Li. *CASIAWebface: Learning Face Representation from Scratch_, arXiv:1411.7923, 2014. [PDF](https://arxiv.org/pdf/1411.7923)
 
-1. K. Zhang, Z. Zhang, Z. Li and Y. Qiao. _Joint Face Detection and Alignment Using Multitask Cascaded Convolutional Networks_, IEEE Signal Processing Letters, 2016. [PDF](https://kpzhang93.github.io/MTCNN_face_detection_alignment/paper/spl.pdf)
+1. K. Zhang, Z. Zhang, Z. Li and Y. Qiao. *Joint Face Detection and Alignment Using Multitask Cascaded Convolutional Networks_, IEEE Signal Processing Letters, 2016. [PDF](https://kpzhang93.github.io/MTCNN_face_detection_alignment/paper/spl.pdf)

@@ -30,7 +30,6 @@ setuptools.setup(
         "facenet_pytorch.models.utils",
         "facenet_pytorch.data",
     ],
-    package_dir={"facenet_pytorch": "."},
     package_data={"": ["*net.pt"]},
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -1,10 +1,12 @@
 import os
+import importlib.resources
 
 import numpy as np
 import torch
 from torch import nn
 
-from .utils.detect_face import detect_face, extract_face
+from facenet_pytorch.models.utils.detect_face import detect_face, extract_face
+import facenet_pytorch.data
 
 
 class PNet(nn.Module):
@@ -31,7 +33,7 @@ class PNet(nn.Module):
         self.training = False
 
         if pretrained:
-            state_dict_path = os.path.join(os.path.dirname(__file__), "../data/pnet.pt")
+            state_dict_path = importlib.resources.path(facenet_pytorch.data, "pnet.pt")
             state_dict = torch.load(state_dict_path)
             self.load_state_dict(state_dict)
 
@@ -76,7 +78,7 @@ class RNet(nn.Module):
         self.training = False
 
         if pretrained:
-            state_dict_path = os.path.join(os.path.dirname(__file__), "../data/rnet.pt")
+            state_dict_path = importlib.resources.path(facenet_pytorch.data, "rnet.pt")
             state_dict = torch.load(state_dict_path)
             self.load_state_dict(state_dict)
 
@@ -129,7 +131,7 @@ class ONet(nn.Module):
         self.training = False
 
         if pretrained:
-            state_dict_path = os.path.join(os.path.dirname(__file__), "../data/onet.pt")
+            state_dict_path = importlib.resources.path(facenet_pytorch.data, "onet.pt")
             state_dict = torch.load(state_dict_path)
             self.load_state_dict(state_dict)
 
