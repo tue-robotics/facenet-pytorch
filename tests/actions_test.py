@@ -37,9 +37,11 @@ test_dir = Path(__file__).parent
 root_dir = test_dir.parent
 example_dir = root_dir / "examples"
 
-os.system(f"jupyter nbconvert --to python --stdout {example_dir}/infer.ipynb {example_dir}/finetune.ipynb > {example_dir}/tmptest.py")
-
-exec((example_dir / "tmptest.py").open().read())
+os.system(
+    f"jupyter nbconvert --to python --stdout {example_dir}/infer.ipynb {example_dir}/finetune.ipynb > {example_dir}/tmptest.py"
+)
+sys.path.append(str(example_dir))
+import tmptest  # noqa: F401
 os.chdir(test_dir)
 
 
@@ -65,11 +67,11 @@ aligned_fromfile = []
 for img, idx in dataset:
     name = dataset.idx_to_class[idx]
     start = time()
-    img_align = mtcnn_pt(img, save_path="data/test_images_aligned/{}/1.png".format(name))
+    img_align, _ = mtcnn_pt(img, save_path=[f"data/test_images_aligned/{name}/1.png"])
     print("MTCNN time: {:6f} seconds".format(time() - start))
 
     # Comparison between types
-    img_box = mtcnn_pt.detect(img)[0]
+    img_box = mtcnn_pt.detect([img])[0][0]
     assert (img_box - mtcnn_pt.detect(np.array(img))[0]).sum() < 1e-2
     assert (img_box - mtcnn_pt.detect(torch.as_tensor(np.array(img)))[0]).sum() < 1e-2
 
@@ -83,15 +85,15 @@ for img, idx in dataset:
     print("\nprobability - ", mtcnn_pt.detect(img))
     mtcnn_pt.selection_method = "largest"
     print("largest - ", mtcnn_pt.detect(img))
-    mtcnn_pt.selection_method = "largest_over_theshold"
-    print("largest_over_theshold - ", mtcnn_pt.detect(img))
+    mtcnn_pt.selection_method = "largest_over_threshold"
+    print("largest_over_threshold - ", mtcnn_pt.detect(img))
     mtcnn_pt.selection_method = "center_weighted_size"
     print("center_weighted_size - ", mtcnn_pt.detect(img))
 
     if img_align is not None:
         names.append(name)
-        aligned.append(img_align)
-        aligned_fromfile.append(get_image("data/test_images_aligned/{}/1.png".format(name), trans_cropped))
+        aligned.append(img_align[0])
+        aligned_fromfile.append(get_image(f"data/test_images_aligned/{name}/1.png", trans_cropped))
 
 aligned = torch.stack(aligned)
 aligned_fromfile = torch.stack(aligned_fromfile)
@@ -144,7 +146,6 @@ for i, ds in enumerate(["vggface2", "casia-webface"]):
         assert total_error < 1e-2
         assert total_error_fromfile < 1e-2
 
-
     #### TEST CLASSIFICATION ####
     resnet_pt = InceptionResnetV1(pretrained=ds, classify=True).eval()
     prob = resnet_pt(aligned)
@@ -184,7 +185,6 @@ assert total_error < 1e-2
 
 # half is not supported on CPUs, only GPUs
 if torch.cuda.is_available():
-
     mtcnn = MTCNN(keep_all=True, device="cuda").half()
     boxes_test, _ = mtcnn.detect(img)
     _ = mtcnn(img)

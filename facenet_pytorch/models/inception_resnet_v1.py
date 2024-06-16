@@ -1,8 +1,6 @@
 import os
 
-import requests
 import torch
-from requests.adapters import HTTPAdapter
 from torch import nn
 from torch.nn import functional as F
 
@@ -10,16 +8,10 @@ from .utils.download import download_url_to_file
 
 
 class BasicConv2d(nn.Module):
-
     def __init__(self, in_planes, out_planes, kernel_size, stride, padding=0):
         super().__init__()
         self.conv = nn.Conv2d(
-            in_planes,
-            out_planes,
-            kernel_size=kernel_size,
-            stride=stride,
-            padding=padding,
-            bias=False,
+            in_planes, out_planes, kernel_size=kernel_size, stride=stride, padding=padding, bias=False
         )  # verify bias false
         self.bn = nn.BatchNorm2d(
             out_planes,
@@ -37,7 +29,6 @@ class BasicConv2d(nn.Module):
 
 
 class Block35(nn.Module):
-
     def __init__(self, scale=1.0):
         super().__init__()
 
@@ -46,8 +37,7 @@ class Block35(nn.Module):
         self.branch0 = BasicConv2d(256, 32, kernel_size=1, stride=1)
 
         self.branch1 = nn.Sequential(
-            BasicConv2d(256, 32, kernel_size=1, stride=1),
-            BasicConv2d(32, 32, kernel_size=3, stride=1, padding=1),
+            BasicConv2d(256, 32, kernel_size=1, stride=1), BasicConv2d(32, 32, kernel_size=3, stride=1, padding=1)
         )
 
         self.branch2 = nn.Sequential(
@@ -71,7 +61,6 @@ class Block35(nn.Module):
 
 
 class Block17(nn.Module):
-
     def __init__(self, scale=1.0):
         super().__init__()
 
@@ -99,7 +88,6 @@ class Block17(nn.Module):
 
 
 class Block8(nn.Module):
-
     def __init__(self, scale=1.0, noReLU=False):
         super().__init__()
 
@@ -130,7 +118,6 @@ class Block8(nn.Module):
 
 
 class Mixed_6a(nn.Module):
-
     def __init__(self):
         super().__init__()
 
@@ -153,18 +140,15 @@ class Mixed_6a(nn.Module):
 
 
 class Mixed_7a(nn.Module):
-
     def __init__(self):
         super().__init__()
 
         self.branch0 = nn.Sequential(
-            BasicConv2d(896, 256, kernel_size=1, stride=1),
-            BasicConv2d(256, 384, kernel_size=3, stride=2),
+            BasicConv2d(896, 256, kernel_size=1, stride=1), BasicConv2d(256, 384, kernel_size=3, stride=2)
         )
 
         self.branch1 = nn.Sequential(
-            BasicConv2d(896, 256, kernel_size=1, stride=1),
-            BasicConv2d(256, 256, kernel_size=3, stride=2),
+            BasicConv2d(896, 256, kernel_size=1, stride=1), BasicConv2d(256, 256, kernel_size=3, stride=2)
         )
 
         self.branch2 = nn.Sequential(
@@ -203,14 +187,7 @@ class InceptionResnetV1(nn.Module):
         dropout_prob {float} -- Dropout probability. (default: {0.6})
     """
 
-    def __init__(
-        self,
-        pretrained=None,
-        classify=False,
-        num_classes=None,
-        dropout_prob=0.6,
-        device=None,
-    ):
+    def __init__(self, pretrained=None, classify=False, num_classes=None, dropout_prob=0.6, device=None):
         super().__init__()
 
         # Set simple attributes
@@ -234,11 +211,7 @@ class InceptionResnetV1(nn.Module):
         self.conv2d_4a = BasicConv2d(80, 192, kernel_size=3, stride=1)
         self.conv2d_4b = BasicConv2d(192, 256, kernel_size=3, stride=2)
         self.repeat_1 = nn.Sequential(
-            Block35(scale=0.17),
-            Block35(scale=0.17),
-            Block35(scale=0.17),
-            Block35(scale=0.17),
-            Block35(scale=0.17),
+            Block35(scale=0.17), Block35(scale=0.17), Block35(scale=0.17), Block35(scale=0.17), Block35(scale=0.17)
         )
         self.mixed_6a = Mixed_6a()
         self.repeat_2 = nn.Sequential(
@@ -255,11 +228,7 @@ class InceptionResnetV1(nn.Module):
         )
         self.mixed_7a = Mixed_7a()
         self.repeat_3 = nn.Sequential(
-            Block8(scale=0.20),
-            Block8(scale=0.20),
-            Block8(scale=0.20),
-            Block8(scale=0.20),
-            Block8(scale=0.20),
+            Block8(scale=0.20), Block8(scale=0.20), Block8(scale=0.20), Block8(scale=0.20), Block8(scale=0.20)
         )
         self.block8 = Block8(noReLU=True)
         self.avgpool_1a = nn.AdaptiveAvgPool2d(1)

@@ -38,31 +38,31 @@ Also included in this repo is an efficient pytorch implementation of MTCNN for f
     ```bash
     # With pip:
     pip install facenet-pytorch
-    
+
     # or clone this repo, removing the '-' to allow python imports:
     git clone https://github.com/timesler/facenet-pytorch.git facenet_pytorch
-    
+
     # or use a docker container (see https://github.com/timesler/docker-jupyter-dl-gpu):
     docker run -it --rm timesler/jupyter-dl-gpu pip install facenet-pytorch && ipython
     ```
 
-1. In python, import facenet-pytorch and instantiate models:
+2. In python, import facenet-pytorch and instantiate models:
 
     ```py
     from facenet_pytorch import MTCNN, InceptionResnetV1
-    
+
     # If required, create a face detection pipeline using MTCNN:
     mtcnn = MTCNN(image_size=<image_size>, margin=<margin>)
-    
+
     # Create an inception resnet (in eval mode):
     resnet = InceptionResnetV1(pretrained='vggface2').eval()
     ```
 
-1. Process an image:
+3. Process an image:
 
     ```py
     from PIL import Image
-    
+
     img = Image.open(<image path>)
 
     # Get cropped and prewhitened image tensor
@@ -176,7 +176,7 @@ The package and any of the example notebooks can be run with docker (or nvidia-d
 docker run --rm -p 8888:8888
     -v ./facenet-pytorch:/home/jovyan timesler/jupyter-dl-gpu \
     -v <path to data>:/home/jovyan/data
-    pip install facenet-pytorch && jupyter lab 
+    pip install facenet-pytorch && jupyter lab
 ```
 
 Navigate to the examples/ directory and run any of the ipython notebooks.

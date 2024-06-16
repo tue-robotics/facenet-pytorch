@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 
 import torch
 from facenet_pytorch import MTCNN, training
@@ -16,7 +17,9 @@ def main():
     batch_size = 32
 
     # Generate data loader
-    ds = datasets.ImageFolder(root="data/test_images/", transform=transforms.Resize((512, 512)))
+    test_dir = Path(__file__).parent
+    data_dir = test_dir / "data"
+    ds = datasets.ImageFolder(root=data_dir / "test_images", transform=transforms.Resize((512, 512)))
     dl = DataLoader(
         dataset=ds,
         num_workers=4,
