@@ -1,13 +1,15 @@
-from facenet_pytorch import MTCNN, training
-import torch
-from torchvision import datasets, transforms
-from torch.utils.data import DataLoader, RandomSampler
-from tqdm import tqdm
 import time
+from pathlib import Path
+
+import torch
+from facenet_pytorch import MTCNN, training
+from torch.utils.data import DataLoader, RandomSampler
+from torchvision import datasets, transforms
+from tqdm import tqdm
 
 
 def main():
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f'Running on device "{device}"')
 
     mtcnn = MTCNN(device=device)
@@ -15,10 +17,9 @@ def main():
     batch_size = 32
 
     # Generate data loader
-    ds = datasets.ImageFolder(
-        root='data/test_images/',
-        transform=transforms.Resize((512, 512))
-    )
+    test_dir = Path(__file__).parent
+    data_dir = test_dir / "data"
+    ds = datasets.ImageFolder(root=data_dir / "test_images", transform=transforms.Resize((512, 512)))
     dl = DataLoader(
         dataset=ds,
         num_workers=4,
@@ -32,8 +33,8 @@ def main():
     for x, _ in tqdm(dl):
         faces.extend(mtcnn(x))
     elapsed = time.time() - start
-    print(f'Elapsed: {elapsed} | EPS: {len(dl) * batch_size / elapsed}')
+    print(f"Elapsed: {elapsed} | EPS: {len(dl) * batch_size / elapsed}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

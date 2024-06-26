@@ -1,0 +1,228 @@
+[tool.poetry]
+name = "facenet-pytorch"
+version = "2.5.2"
+description = "Pretrained Pytorch face detection and recognition models"
+readme = "README.md"
+repository = "https://github.com/timesler/facenet-pytorch"
+authors = [
+    "Tim Esler <tim.esler@gmail.com>",
+    "Matthijs van der Burgh <MatthijsBurgh@outlook.com>",
+]
+maintainers = [
+    "Matthijs van der Burgh <MatthijsBurgh@outlook.com>",
+]
+classifiers = [
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+]
+include = [{ path = "facenet_pytorch/data/*.pt" }]
+packages = [{ include = "facenet_pytorch" }]
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<3.13"
+numpy = [
+    {version = ">=1.21,<1.25", python = "<3.9"},
+    {version = ">=1.21,<1.27", python = ">=3.9"},
+]
+
+#mypy = {version = "^1.0"}
+#pytest = {version = "^8.0"}
+#pytest-cov = {version = "^5.0"}
+torch = "^2.3.0"
+torchvision = "^0.18.0"
+tqdm = "^4.0.0"
+pillow = "^10.3.0"
+jupyter = "^1.0.0"
+
+
+[tool.poetry.group.dev.dependencies]
+# mmcv
+# cv2
+# pandas
+# Pillow
+pandas = "^2.0"
+pre-commit = "^3.0"
+ruff = "~0.4.0"
+ruff-lsp = "~0.0.53"
+mmcv = "^2.2.0"
+opencv-python = "^4.10.0.82"
+scikit-learn = [
+    {version = ">=1.3,<1.4", python = "<3.9"},
+    {version = "^1.4", python = ">=3.9"},
+]
+scipy = [
+    {version = ">=1.10,<1.11", python = "<3.9"},
+    {version = "^1.11", python = ">=3.9"},
+]
+ipython = "^8.0.0"
+tensorboard = "^2.13.0"
+
+
+[tool.poetry.group.test.dependencies]
+coverage = "^7.5.3"
+
+[build-system]
+requires = ["poetry-core>=1.9"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+force-exclude = true
+line-length = 120
+output-format = "full"
+target-version = "py38"  # Should match the minumum version in pyproject.toml
+exclude = [
+    ".git",
+    ".svn",
+    ".mypy_cache",
+    ".mypy",
+    ".pytest_cache",
+    ".ruff_cache",
+    "__pycache__",
+    ".coverage",
+    "coverage",
+    ".tox",
+    ".idea",
+    ".venv",
+    "node_modules",
+    "tests/*.py",
+    "setup.py",
+    "facenet_pytorch/models/utils/tensorflow2pytorch.py",
+]
+
+[tool.ruff.lint]
+select = [
+    # Pyflakes
+    "F",
+    # PYcodestyle
+    "E", # Errors
+    "W", # Warnings
+    # mccabe
+    # "C90",
+    # isort
+    "I",
+    # pep8-naming
+    "N",
+    # pydocstyle
+    "D",
+    # pyupgrade
+    "UP",
+    # flake8
+    "YTT", # flake8-2020
+    "ANN", # flake8-annotations
+    "ASYNC", # flake8-async
+    "S", # flake8-bandit
+    "BLE", # flake8-blind-except
+    "FBT", #flake8-boolean-trap
+    "B", # flake8-bugbear
+    "A", # flake8-builtins
+    "COM", # flake8-commas
+    # "CPY", # flake8-copyright
+    "C4", # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "T10", # flake8-debugger
+    # "DJ", # flake8-django
+    "EM", # flake8-errmsg
+    "EXE", # flake8-executable
+    "FA", # flake8-future-annotations
+    "ISC", # flake8-implicit-str-concat
+    "ICN", # flake8-import-conventions
+    "LOG", # flake8-logging
+    "G", # flake8-logging-format
+    "INP", # flake8-no-pep420
+    "PIE", # flake8-pie
+    "T20", # flake8-print
+    "PYI", # flake8-pyi
+    "PT", # flake8-pytest-style
+    "Q", # flake8-quotes
+    "RSE", # flake8-raise
+    "RET", # flake8-return
+    "SLF", # flake8-self
+    "SLOT", # flake8-slots
+    "SIM", # flake8-simplify
+    "TID", # flake8-tidy-imports
+    "TCH", # flake8-type-checking
+    "INT", # flake8-gettext
+    "ARG", # flake8-unsued-arguments
+    "PTH", # flake8-use-pathlib
+    "TD", # flake8-todos
+    # "FIX", # flake8-fixme
+    # eradicate (remove commented code)
+    # "ERA",
+    # pandas-vet
+    "PD",
+    # pygrep-hooks
+    "PGH",
+    # Pylint
+    "PL",
+    # "PLC", # Convention
+    # "PLE", # Error
+    # "PLR", # Refactor
+    # "PLW", # Warning
+    # tryceratrops (exception handling linting)
+    "TRY",
+    # flynt
+    "FLY",
+    # NumPy-specific rules
+    "NPY",
+    # Airflow
+    # "AIR",
+    # Perflint
+    "PERF",
+    # refurb
+    # "FURB", # in preview
+    # Ruff-specific rules
+    "RUF",
+]
+# Ignore codes such as "F401"
+ignore = [
+    "ANN002", # Don't annotate *args
+    "ANN003", # Don't annotate **kwargs
+    "ANN101", # Don't annotate self
+    "ANN102", # Don't annotate cls
+    "COM812", # Possibly conflicting with the formatter; Missing trailing comma
+    "D100", # Missing docstring in public module
+    "D104", # Missing docstring in public package
+    "D206", # Fixed by the formatter; Docstring should be indented with spaces, not tabs
+    "D300", # Fixed by the formatter; Use """triple double quotes""" (found '''triple single quotes''')
+    "E111", # Fixed by the formatter; Indentation is not a multiple of four
+    "E114", # Fixed by the formatter; Indentation is not a multiple of four (comment)
+    "E117", # Fixed by the formatter; Over-indented
+    "ISC001", # Possibly conflicting with the formatter; Avoid implicit string concatenation
+    "Q000", # Fixed by the formatter; Fix bad inline quotes
+    "Q001", # Fixed by the formatter; Fix bad multiline quotes
+    "Q002", # Fixed by the formatter; Fix bad docstring quotes
+    "Q003", # Fixed by the formatter; Fix avoidable escape quotes
+    "RET501", # Allow explicit return of None, even when None is the only optional return value
+    "TD003", # No need add a link following a TODO
+    "W191", # Fixed by the formatter; Indentation contains tabs
+]
+
+[tool.ruff.lint.flake8-annotations]
+allow-star-arg-any = true
+mypy-init-return = true
+suppress-dummy-args = true
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "double"
+multiline-quotes = "double"
+
+[tool.ruff.lint.flake8-type-checking]
+quote-annotations = false
+
+[tool.ruff.lint.isort]
+case-sensitive = true
+combine-as-imports = true
+split-on-trailing-comma = false
+
+[tool.ruff.lint.pep8-naming]
+ignore-names = ["i", "j", "k", "ex", "_", "pk", "x", "y", "z", "e", "x1", "x2", "y1", "y2", "w", "h", "cx", "cy", "iou", "k", "v", "f", "ft"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "double"
+skip-magic-trailing-comma = true
