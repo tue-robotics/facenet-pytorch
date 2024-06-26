@@ -3,11 +3,11 @@ import os
 
 import tensorflow as tf
 import torch
+from models.mtcnn import ONet, PNet, RNet
 
 from dependencies.facenet.src import facenet
 from dependencies.facenet.src.align import detect_face
 from facenet_pytorch.models.inception_resnet_v1 import InceptionResnetV1
-from models.mtcnn import ONet, PNet, RNet
 
 
 def import_tf_params(tf_mdl_dir, sess):
@@ -216,10 +216,7 @@ def compare_model_outputs(pt_mdl, sess, test_data):
         images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
         phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
         embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
-        feed_dict = {
-            images_placeholder: test_data.numpy(),
-            phase_train_placeholder: False,
-        }
+        feed_dict = {images_placeholder: test_data.numpy(), phase_train_placeholder: False}
         tf_output = torch.tensor(sess.run(embeddings, feed_dict=feed_dict))
     else:
         tf_output = sess(test_data)
@@ -310,10 +307,7 @@ def tensorflow2pytorch():
     state_dict = mdl.state_dict()
     torch.save(state_dict, f"{tf_mdl_dir}-{data_name}.pt")
     torch.save(
-        {
-            "logits.weight": state_dict["logits.weight"],
-            "logits.bias": state_dict["logits.bias"],
-        },
+        {"logits.weight": state_dict["logits.weight"], "logits.bias": state_dict["logits.bias"]},
         f"{tf_mdl_dir}-{data_name}-logits.pt",
     )
     state_dict.pop("logits.weight")
@@ -328,10 +322,7 @@ def tensorflow2pytorch():
     state_dict = mdl.state_dict()
     torch.save(state_dict, f"{tf_mdl_dir}-{data_name}.pt")
     torch.save(
-        {
-            "logits.weight": state_dict["logits.weight"],
-            "logits.bias": state_dict["logits.bias"],
-        },
+        {"logits.weight": state_dict["logits.weight"], "logits.bias": state_dict["logits.bias"]},
         f"{tf_mdl_dir}-{data_name}-logits.pt",
     )
     state_dict.pop("logits.weight")

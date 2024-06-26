@@ -1,11 +1,9 @@
 import time
 
-import numpy as np
 import torch
 
 
-class Logger(object):
-
+class Logger:
     def __init__(self, mode, length, calculate_mean=False):
         self.mode = mode
         self.length = length
@@ -16,15 +14,15 @@ class Logger(object):
             self.fn = lambda x, i: x
 
     def __call__(self, loss, metrics, i):
-        track_str = "\r{} | {:5d}/{:<5d}| ".format(self.mode, i + 1, self.length)
-        loss_str = "loss: {:9.4f} | ".format(self.fn(loss, i))
-        metric_str = " | ".join("{}: {:9.4f}".format(k, self.fn(v, i)) for k, v in metrics.items())
+        track_str = f"\r{self.mode} | {i + 1:5d}/{self.length:<5d}| "
+        loss_str = f"loss: {self.fn(loss, i):9.4f} | "
+        metric_str = " | ".join(f"{k}: {self.fn(v, i):9.4f}" for k, v in metrics.items())
         print(track_str + loss_str + metric_str + "   ", end="")
         if i + 1 == self.length:
             print("")
 
 
-class BatchTimer(object):
+class BatchTimer:
     """Batch timing class.
     Use this class for tracking training and testing time/rate per batch or per sample.
 
@@ -93,7 +91,6 @@ def pass_epoch(
         tuple(torch.Tensor, dict) -- A tuple of the average loss and a dictionary of average
             metric values across the epoch.
     """
-
     mode = "Train" if model.training else "Valid"
     logger = Logger(mode, length=len(loader), calculate_mean=show_running)
     loss = 0

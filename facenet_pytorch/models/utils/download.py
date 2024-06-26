@@ -1,7 +1,8 @@
+from __future__ import annotations
+
 import hashlib
 import os
 import shutil
-import sys
 import tempfile
 from urllib.request import Request, urlopen
 
@@ -11,8 +12,9 @@ except ImportError:
     from tqdm import tqdm
 
 
-def download_url_to_file(url, dst, hash_prefix=None, progress=True):
-    r"""Download object at the given URL to a local path.
+def download_url_to_file(url: str, dst: PathLike | str, hash_prefix=None, progress: bool = True) -> None:
+    """Download object at the given URL to a local path.
+
     Args:
         url (string): URL of the object to download
         dst (string): Full path where object will be saved, e.g. `/tmp/temporary_file`
@@ -46,13 +48,7 @@ def download_url_to_file(url, dst, hash_prefix=None, progress=True):
     try:
         if hash_prefix is not None:
             sha256 = hashlib.sha256()
-        with tqdm(
-            total=file_size,
-            disable=not progress,
-            unit="B",
-            unit_scale=True,
-            unit_divisor=1024,
-        ) as pbar:
+        with tqdm(total=file_size, disable=not progress, unit="B", unit_scale=True, unit_divisor=1024) as pbar:
             while True:
                 buffer = u.read(8192)
                 if len(buffer) == 0:
@@ -66,7 +62,7 @@ def download_url_to_file(url, dst, hash_prefix=None, progress=True):
         if hash_prefix is not None:
             digest = sha256.hexdigest()
             if digest[: len(hash_prefix)] != hash_prefix:
-                raise RuntimeError('invalid hash value (expected "{}", got "{}")'.format(hash_prefix, digest))
+                raise RuntimeError(f'invalid hash value (expected "{hash_prefix}", got "{digest}")')
         shutil.move(f.name, dst)
     finally:
         f.close()
