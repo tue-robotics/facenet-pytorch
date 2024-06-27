@@ -31,8 +31,8 @@ def import_tf_params(tf_mdl_dir, sess):
     tf_layers = tf.trainable_variables()
     tf_params = sess.run(tf_layers)
 
-    tf_shapes = [p.shape for p in tf_params]
-    tf_layers = [l.name for l in tf_layers]
+    tf_shapes = [param.shape for param in tf_params]
+    tf_layers = [layer.name for layer in tf_layers]
 
     if not callable(tf_mdl_dir):
         path = os.path.join(tf_mdl_dir, "layer_description.json")
@@ -232,11 +232,11 @@ def compare_model_outputs(pt_mdl, sess, test_data):
 
 
 def compare_mtcnn(pt_mdl, tf_fun, sess, ind, test_data):
-    tf_mdls = tf_fun(sess)
-    tf_mdl = tf_mdls[ind]
+    tf_modules = tf_fun(sess)
+    tf_module = tf_modules[ind]
 
     print("\nPassing test data through TF model\n")
-    tf_output = tf_mdl(test_data.numpy())
+    tf_output = tf_module(test_data.numpy())
     tf_output = [torch.tensor(out) for out in tf_output]
     print("\n".join([str(o.view(-1)[:10]) for o in tf_output]))
 
@@ -368,7 +368,7 @@ def tensorflow2pytorch():
     }
 
     print("\nLoad PNet weights and save\n")
-    tf_mdl_dir = lambda sess: detect_face.create_mtcnn(sess, None)
+    tf_mdl_dir = lambda session: detect_face.create_mtcnn(session, None)
     mdl = PNet()
     data_name = "pnet"
     load_tf_model_weights(mdl, lookup_pnet, tf_mdl_dir, is_resnet=False, arg_num=0)

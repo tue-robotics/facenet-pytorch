@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import importlib.resources
 import os
+from typing import TYPE_CHECKING
 
 import numpy as np
 import torch
-from PIL.Image import Image
 from torch import nn
 
 import facenet_pytorch.data
 from facenet_pytorch.models.utils.detect_face import detect_face, extract_face, get_size
+
+if TYPE_CHECKING:
+    from PIL.Image import Image
 
 
 class PNet(nn.Module):

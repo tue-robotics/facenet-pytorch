@@ -1,6 +1,13 @@
+from __future__ import annotations
+
 import time
+from typing import TYPE_CHECKING, Callable
 
 import torch
+
+if TYPE_CHECKING:
+    import torch.utils.data
+    import torch.utils.tensorboard
 
 
 class Logger:
@@ -11,7 +18,7 @@ class Logger:
         if self.calculate_mean:
             self.fn = lambda x, i: x / (i + 1)
         else:
-            self.fn = lambda x, i: x
+            self.fn = lambda x, _: x
 
     def __call__(self, loss, metrics, i):
         track_str = f"\r{self.mode} | {i + 1:5d}/{self.length:<5d}| "
@@ -24,6 +31,7 @@ class Logger:
 
 class BatchTimer:
     """Batch timing class.
+
     Use this class for tracking training and testing time/rate per batch or per sample.
 
     Keyword Arguments:
@@ -33,13 +41,13 @@ class BatchTimer:
             (default: {True})
     """
 
-    def __init__(self, rate=True, per_sample=True):
+    def __init__(self, *, rate: bool = True, per_sample: bool = True):
         self.start = time.time()
         self.end = None
-        self.rate = rate
-        self.per_sample = per_sample
+        self.rate: bool = rate
+        self.per_sample: bool = per_sample
 
-    def __call__(self, y_pred, y):
+    def __call__(self, y_pred, y) -> torch.Tensor:
         self.end = time.time()
         elapsed = self.end - self.start
         self.start = self.end
@@ -59,38 +67,41 @@ def accuracy(logits, y):
 
 
 def pass_epoch(
-    model,
-    loss_fn,
-    loader,
-    optimizer=None,
-    scheduler=None,
-    batch_metrics={"time": BatchTimer()},
-    show_running=True,
-    device="cpu",
-    writer=None,
-):
+    model: torch.nn.Module,
+    loss_fn: Callable,
+    loader: torch.utils.data.DataLoader,
+    optimizer: torch.optim.Optimizer | None = None,
+    scheduler: torch.optim.lr_scheduler.LRScheduler = None,
+    batch_metrics: dict | None = None,
+    writer: torch.utils.tensorboard.SummaryWriter = None,
+    device: torch.device | str = "cpu",
+    *,
+    show_running: bool = True,
+) -> tuple[torch.Tensor, dict]:
     """Train or evaluate over a data epoch.
 
     Arguments:
         model {torch.nn.Module} -- Pytorch model.
         loss_fn {callable} -- A function to compute (scalar) loss.
         loader {torch.utils.data.DataLoader} -- A pytorch data loader.
-
-    Keyword Arguments:
         optimizer {torch.optim.Optimizer} -- A pytorch optimizer.
         scheduler {torch.optim.lr_scheduler._LRScheduler} -- LR scheduler (default: {None})
         batch_metrics {dict} -- Dictionary of metric functions to call on each batch. The default
             is a simple timer. A progressive average of these metrics, along with the average
             loss, is printed every batch. (default: {{'time': iter_timer()}})
+        writer {torch.utils.tensorboard.SummaryWriter} -- Tensorboard SummaryWriter. (default: {None})
+
+    Keyword Arguments:
+        device {str or torch.device} -- Device for pytorch to use. (default: {'cpu'})
         show_running {bool} -- Whether or not to print losses and metrics for the current batch
             or rolling averages. (default: {False})
-        device {str or torch.device} -- Device for pytorch to use. (default: {'cpu'})
-        writer {torch.utils.tensorboard.SummaryWriter} -- Tensorboard SummaryWriter. (default: {None})
 
     Returns:
         tuple(torch.Tensor, dict) -- A tuple of the average loss and a dictionary of average
             metric values across the epoch.
     """
+    if batch_metrics is None:
+        batch_metrics = {"time": BatchTimer()}
     mode = "Train" if model.training else "Valid"
     logger = Logger(mode, length=len(loader), calculate_mean=show_running)
     loss = 0
