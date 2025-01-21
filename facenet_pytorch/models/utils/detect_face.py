@@ -443,7 +443,11 @@ def get_size(img: Image | np.ndarray | torch.Tensor) -> tuple[int, int]:
     if isinstance(img, Image.Image):
         return img.size
 
-    return img.shape[1:]
+    shape = img.shape
+    if shape[0] == 1 or shape[0] == 3:
+        return shape[1:]
+
+    return shape[:-1]
 
 
 def extract_face(
