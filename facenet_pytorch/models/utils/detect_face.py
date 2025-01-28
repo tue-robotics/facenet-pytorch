@@ -477,8 +477,8 @@ def extract_face(
     box = (
         int(max(box[0] - margin[0] / 2, 0)),
         int(max(box[1] - margin[1] / 2, 0)),
-        int(min(box[2] + margin[0] / 2, raw_image_size[0])),
-        int(min(box[3] + margin[1] / 2, raw_image_size[1])),
+        int(min(box[2] + margin[0] / 2, raw_image_size[1])),
+        int(min(box[3] + margin[1] / 2, raw_image_size[0])),
     )
 
     face = crop_resize(img, box, image_size)
