@@ -537,12 +537,13 @@ class MTCNN(nn.Module):
                 if path_im is not None and i > 0:
                     save_name, ext = os.path.splitext(path_im)
                     face_path = save_name + "_" + str(i + 1) + ext
-
+                if isinstance(box_im, (list, tuple, np.ndarray)) and len(box_im) == 4:
+                    box = box_im
                 face = extract_face(im, box, self.image_size, self.margin, face_path)
                 if self.post_process:
                     face = fixed_image_standardization(face)
                 faces_im.append(face)
-
+                break
             faces_im = torch.stack(faces_im) if self.keep_all else faces_im[0]
 
             faces.append(faces_im.cpu())
