@@ -474,12 +474,15 @@ def extract_face(
     """
     margin = [margin * (box[2] - box[0]) / (image_size - margin), margin * (box[3] - box[1]) / (image_size - margin)]
     raw_image_size = get_size(img)
+    box_origin = box.copy()
     box = (
         int(max(box[0] - margin[0] / 2, 0)),
         int(max(box[1] - margin[1] / 2, 0)),
-        int(min(box[2] + margin[0] / 2, raw_image_size[0])),
-        int(min(box[3] + margin[1] / 2, raw_image_size[1])),
+        int(min(box[2] + margin[0] / 2, raw_image_size[1])),
+        int(min(box[3] + margin[1] / 2, raw_image_size[0])),
     )
+    
+    #assert box == box_origin
 
     face = crop_resize(img, box, image_size)
 
