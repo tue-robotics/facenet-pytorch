@@ -531,19 +531,21 @@ class MTCNN(nn.Module):
             if not self.keep_all:
                 box_im = box_im[[0]]
 
+            # If box contains a single face, convert to list for handling
+            if isinstance(box_im, (np.ndarray)) and len(box_im) == 4:  # noqa: PLR2004
+                box_im = [box_im]
+
             faces_im = []
             for i, box in enumerate(box_im):
                 face_path = path_im
                 if path_im is not None and i > 0:
                     save_name, ext = os.path.splitext(path_im)
                     face_path = save_name + "_" + str(i + 1) + ext
-                if isinstance(box_im, (list, tuple, np.ndarray)) and len(box_im) == 4:
-                    box = box_im
                 face = extract_face(im, box, self.image_size, self.margin, face_path)
                 if self.post_process:
                     face = fixed_image_standardization(face)
                 faces_im.append(face)
-                break
+
             faces_im = torch.stack(faces_im) if self.keep_all else faces_im[0]
 
             faces.append(faces_im.cpu())
