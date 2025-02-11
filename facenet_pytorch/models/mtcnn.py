@@ -460,7 +460,7 @@ class MTCNN(nn.Module):
                 box_order = np.argsort(probs)[::-1]
             elif method == "center_weighted_size":
                 box_sizes = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
-                height, width = get_size(img)
+                width, height = get_size(img)
                 img_center = (width / 2, height / 2)
                 box_centers = np.asarray(list(zip((boxes[:, 0] + boxes[:, 2]) / 2, (boxes[:, 1] + boxes[:, 3]) / 2)))
                 offsets = box_centers - img_center
@@ -531,13 +531,16 @@ class MTCNN(nn.Module):
             if not self.keep_all:
                 box_im = box_im[[0]]
 
+            # If box contains a single face, convert to list for handling
+            if isinstance(box_im, (np.ndarray)) and len(box_im) == 4:  # noqa: PLR2004
+                box_im = [box_im]
+
             faces_im = []
             for i, box in enumerate(box_im):
                 face_path = path_im
                 if path_im is not None and i > 0:
                     save_name, ext = os.path.splitext(path_im)
                     face_path = save_name + "_" + str(i + 1) + ext
-
                 face = extract_face(im, box, self.image_size, self.margin, face_path)
                 if self.post_process:
                     face = fixed_image_standardization(face)

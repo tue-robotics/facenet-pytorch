@@ -41,10 +41,10 @@ jupyter = "^1.0.0"
 # cv2
 # pandas
 # Pillow
+ipython = "^8.0.0"
 pandas = "^2.0"
 pre-commit = "^3.0"
-ruff = "~0.4.0"
-ruff-lsp = "~0.0.53"
+ruff = "~0.8.0"
 mmcv = "^2.2.0"
 opencv-python = "^4.10.0.82"
 scikit-learn = [
@@ -55,9 +55,7 @@ scipy = [
     {version = ">=1.10,<1.11", python = "<3.9"},
     {version = "^1.11", python = ">=3.9"},
 ]
-ipython = "^8.0.0"
 tensorboard = "^2.13.0"
-
 
 [tool.poetry.group.test.dependencies]
 coverage = "^7.5.3"
