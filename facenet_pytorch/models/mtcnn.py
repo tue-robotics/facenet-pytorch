@@ -460,7 +460,7 @@ class MTCNN(nn.Module):
                 box_order = np.argsort(probs)[::-1]
             elif method == "center_weighted_size":
                 box_sizes = (boxes[:, 2] - boxes[:, 0]) * (boxes[:, 3] - boxes[:, 1])
-                height, width = get_size(img)
+                width, height = get_size(img)
                 img_center = (width / 2, height / 2)
                 box_centers = np.asarray(list(zip((boxes[:, 0] + boxes[:, 2]) / 2, (boxes[:, 1] + boxes[:, 3]) / 2)))
                 offsets = box_centers - img_center
