@@ -468,6 +468,9 @@ def extract_face(
     Returns:
         Tensor representing the extracted face.
     """
+    if not isinstance(box, np.ndarray) or box.shape != (4,):
+        raise ValueError(f"Box should be a numpy array with four elements, got {box}")
+    
     margin = [margin * (box[2] - box[0]) / (image_size - margin), margin * (box[3] - box[1]) / (image_size - margin)]
     raw_image_size = get_size(img)
     box = (
