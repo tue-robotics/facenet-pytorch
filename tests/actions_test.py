@@ -18,6 +18,7 @@ from torchvision import datasets, transforms
 
 from facenet_pytorch.models.inception_resnet_v1 import InceptionResnetV1, get_torch_home
 from facenet_pytorch.models.mtcnn import MTCNN, fixed_image_standardization
+from facenet_pytorch.models.utils.detect_face import detect_face
 
 #### CLEAR ALL OUTPUT FILES ####
 
@@ -219,3 +220,32 @@ for f in tmp_files:
 
 img = Image.new("RGB", (512, 512))
 mtcnn(img)
+
+#### TEST BOX VALIDATION ####
+
+def test_box_validation():
+    # Test with valid box
+    valid_box = np.array([1, 2, 3, 4])
+    try:
+        detect_face(valid_box)
+        print("Valid box test passed.")
+    except ValueError as e:
+        print(f"Valid box test failed: {e}")
+
+    # Test with invalid box
+    invalid_box = np.array([1, 2, 3])
+    try:
+        detect_face(invalid_box)
+        print("Invalid box test failed.")
+    except ValueError as e:
+        print(f"Invalid box test passed: {e}")
+
+    # Test with invalid type
+    invalid_box_type = [1, 2, 3, 4]
+    try:
+        detect_face(invalid_box_type)
+        print("Invalid box type test failed.")
+    except ValueError as e:
+        print(f"Invalid box type test passed: {e}")
+
+test_box_validation()
