@@ -468,17 +468,7 @@ def extract_face(
     Returns:
         Tensor representing the extracted face.
     """
-    if not isinstance(box, np.ndarray) or box.shape != (4,):
-        raise ValueError(f"Box should be a numpy array with four elements, got {box}")
-    
-    margin = [margin * (box[2] - box[0]) / (image_size - margin), margin * (box[3] - box[1]) / (image_size - margin)]
-    raw_image_size = get_size(img)
-    box = (
-        int(max(box[0] - margin[0] / 2, 0)),
-        int(max(box[1] - margin[1] / 2, 0)),
-        int(min(box[2] + margin[0] / 2, raw_image_size[0])),
-        int(min(box[3] + margin[1] / 2, raw_image_size[1])),
-    )
+    box = extract_box(img, box, image_size, margin)
 
     face = crop_resize(img, box, image_size)
 
@@ -488,3 +478,32 @@ def extract_face(
         save_img(face, save_path)
 
     return tv_functional.to_tensor(np.float32(face))
+
+def extract_box(img: np.ndarray | torch.Tensor, box: np.ndarray, image_size:int = 160, margin: int = 0) -> np.ndarray:
+    """Extract box + margin from PIL Image given bounding box.
+
+    Arguments:
+        img {PIL.Image} -- A PIL Image.
+        box {numpy.ndarray} -- Four-element bounding box.
+        image_size {int} -- Output image size in pixels. The image will be square.
+        margin {int} -- Margin to add to bounding box, in terms of pixels in the final image.
+            Note that the application of the margin differs slightly from the davidsandberg/facenet
+            repo, which applies the margin to the original image before resizing, making the margin
+            dependent on the original image size.
+
+    Returns:
+        box-- np.ndarray[int] of ROI corners
+    """
+    margin = [
+        margin * (box[2] - box[0]) / (image_size - margin),
+        margin * (box[3] - box[1]) / (image_size - margin),
+    ]
+    raw_image_size = get_size(img)
+    box = [
+        int(max(box[0] - margin[0] / 2, 0)),
+        int(max(box[1] - margin[1] / 2, 0)),
+        int(min(box[2] + margin[0] / 2, raw_image_size[0])),
+        int(min(box[3] + margin[1] / 2, raw_image_size[1])),
+    ]
+
+    return box
