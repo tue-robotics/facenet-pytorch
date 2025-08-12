@@ -16,7 +16,7 @@ jobs:
             poetry-version: "1.8.5"
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up Python ${{ matrix.python-version }}
       id: setup-python
       uses: actions/setup-python@v5
